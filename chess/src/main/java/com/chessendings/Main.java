@@ -16,6 +16,9 @@ import com.github.bhlangonijr.chesslib.move.MoveGeneratorException;
 import com.github.bhlangonijr.chesslib.move.MoveList;
 import java.util.logging.Logger;
 
+import javax.swing.JFrame;
+
+import com.chessendings.ChessCombinations;
 public class Main {
 //files and logger
 static File chessGamesFile;
@@ -23,12 +26,13 @@ static FileWriter chessGamesWriter;
 static Logger logger = Logger.getAnonymousLogger();
     public static void main(String[] args) throws IOException {
         //file writing set up
+        JFrame chessFrame = ChessComboUI.buildFrame();
         Scanner inputManager = new Scanner(System.in);
         logger.info("Enter in a file path to log the chess game combinations");
         String filePath = inputManager.nextLine();
         try{
         chessGamesFile = new File(filePath);
-        chessGamesWriter = new FileWriter(filePath);
+        chessGamesWriter = new FileWriter(chessGamesFile);
         }
         catch(IOException e){
             logger.info("Something went wrong with creating file at path: " + "");
@@ -48,7 +52,7 @@ static Logger logger = Logger.getAnonymousLogger();
             logger.info("SAN loaded successfully");
             //get All Games
             chessGamesWriter.write("Here are all possible game endings from this chess position: \n" + startBoard.toString() + "\n");
-            getAllGamesFromPosition(startBoard, initialList);
+            ChessCombinations.getAllGamesFromPosition(startBoard, initialList, chessGamesWriter);
         }
         catch(MoveConversionException e){
             logger.severe("An Error occured while attempting to load the SAN String: ");
@@ -65,55 +69,4 @@ static Logger logger = Logger.getAnonymousLogger();
         }
     }
 
-    private static void getAllGamesFromPosition(Board board, MoveList gameMoves) throws MoveGeneratorException {
-        //if the game ends, log the game and information about it.
-        if (isGameOver(board)) {
-            String game = addGameDescriptor(gameMoves.toSanWithMoveNumbers(), board);
-            
-            try {
-                chessGamesWriter.write(game + "\n");
-            } catch (IOException e) {
-                logger.info("something went wrong with writing to the file");
-                try {
-                    chessGamesWriter.close();
-                } catch (IOException e1) {
-                    logger.info("something went wrong with closing the file");
-                }
-            }
-
-            return;
-        }
-
-        List<Move> moves = board.legalMoves();
-        for (Move move : moves) {
-            board.doMove(move, true);
-            gameMoves.add(move);
-            getAllGamesFromPosition(board, new MoveList(gameMoves));
-            board.undoMove();
-            gameMoves.removeLast();
-        }
-    }
-
-    private static boolean isGameOver(Board board){
-        return board.isMated() || board.isDraw();
-    }
-
-    private static String addGameDescriptor(String san, Board board){
-        if(board.isInsufficientMaterial()){
-            return san + " -- This Game ends in a draw by insufficient material.";
-        }
-        if(board.isStaleMate()){
-            return san + " -- This game ends in a draw by staleMate.";
-        }
-        if(board.isRepetition()){
-            return san + " -- This game ends with a draw by repetition.";
-        }
-        if(board.isDraw()){
-            return san + " -- This game ends with a draw by 50 move rule";
-        }
-        if(board.isMated()){
-            return san + " -- This game ends with " + (board.getSideToMove() == Side.WHITE ? "Black": "White") + " winning by checkmate.";
-        }
-        return san;
-    }
 }
