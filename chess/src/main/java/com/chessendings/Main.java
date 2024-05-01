@@ -26,7 +26,7 @@ static FileWriter chessGamesWriter;
 static Logger logger = Logger.getAnonymousLogger();
     public static void main(String[] args) throws IOException {
         //file writing set up
-        JFrame chessFrame = ChessComboUI.buildFrame();
+        JFrame chessFrame = new ChessComboUI();
         Scanner inputManager = new Scanner(System.in);
         logger.info("Enter in a file path to log the chess game combinations");
         String filePath = inputManager.nextLine();
