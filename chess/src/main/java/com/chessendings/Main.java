@@ -38,7 +38,7 @@ static Logger logger = Logger.getAnonymousLogger();
             }
             
             //load a board from arguments
-            System.out.println("Input a chess SAN String.");
+            System.out.println("Input a chess SAN String. Leave blank to start from the begining position");
             try{
                 String inputSan = inputManager.nextLine();
                 MoveList initialList = new MoveList();
@@ -63,7 +63,7 @@ static Logger logger = Logger.getAnonymousLogger();
                     System.out.println("Nothing will be written by a depth of 0. Skipping file writing.");
                     continue;
                 }
-                chessGamesWriter.write("Here are all possible game endings from this chess position: \n" + startBoard.toString() + "\n");
+                chessGamesWriter.write("Here are all possible game endings within " + depth/2 + " turns from this chess position: \n" + startBoard.toString() + "\n");
                 ChessCombinations.getAllGamesFromPosition(startBoard, initialList, chessGamesWriter, doInsufficientMaterial, doStaleMate, doRepetition, do50MoveRule, doCheckMate, depth, BigInteger.ZERO);
             }
             catch(MoveConversionException e){
