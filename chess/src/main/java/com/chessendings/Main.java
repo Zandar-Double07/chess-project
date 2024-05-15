@@ -55,7 +55,7 @@ static Logger logger = Logger.getAnonymousLogger();
                 boolean doRepetition = getBooleanFromInput(inputManager, "Log draw by repetition? Enter y/n: ");
                 boolean doCheckMate = getBooleanFromInput(inputManager, "Log game ends by check mate? Enter y/n: ");
                 boolean do50MoveRule = getBooleanFromInput(inputManager, "Log draw by 50 move rule?\n WARNING, this will make your file very large if you have no depth limit. Enter y/n: ");
-                if(BooleanUtils.and(new boolean[]{doInsufficientMaterial, doStaleMate, doRepetition, doCheckMate, do50MoveRule})){
+                if(!BooleanUtils.and(new boolean[]{doInsufficientMaterial, doStaleMate, doRepetition, doCheckMate, do50MoveRule})){
                     System.out.println("No options selected. Skipping file writing");
                     continue;
                 }

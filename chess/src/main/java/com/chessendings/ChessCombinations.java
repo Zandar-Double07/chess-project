@@ -33,6 +33,10 @@ public class ChessCombinations {
             }
             return;
         }
+        //return if no more depth
+        if (depth == 0){
+            return;
+        }
         //For every move
         List<Move> moves = board.legalMoves();
         for (Move move : moves) {
